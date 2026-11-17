@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forza Horizon RWD 甩尾調校知識庫</title>
+  <style>
+    :root {
+      --bg-main: #121212;
+      --bg-card: #1e1e1e;
+      --border-color: #2e2e2e;
+      --text-main: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --accent: #00ff66;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: 'Segoe UI', 'Noto Sans TC', sans-serif;
+      line-height: 1.6;
+    }
+    .site-header {
+      background-color: var(--bg-card);
+      border-bottom: 2px solid var(--accent);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    .site-header h1 {
+      font-size: 2rem;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+    .site-header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.2rem;
+    }
+    .site-nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .site-nav a {
+      color: var(--text-main);
+      text-decoration: none;
+      padding: 0.4rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    .site-nav a:hover, .site-nav a.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background-color: rgba(0, 255, 102, 0.08);
+    }
+    .container {
+      max-width: 1000px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+    .section-title {
+      border-left: 4px solid var(--accent);
+      padding-left: 0.75rem;
+      margin: 2rem 0 1.2rem 0;
+      font-size: 1.4rem;
+    }
+    .grid-layout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .tuning-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .card-header h2 {
+      font-size: 1.2rem;
+      color: #ffffff;
+    }
+    .badge {
+      background-color: rgba(0, 255, 102, 0.12);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.15rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-weight: bold;
+    }
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.2rem;
+    }
+    .param-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .param-table tr {
+      border-bottom: 1px solid var(--border-color);
+    }
+    .param-table tr:last-child {
+      border-bottom: none;
+    }
+    .param-table td {
+      padding: 0.55rem 0.2rem;
+    }
+    .param-table td.val {
+      text-align: right;
+      font-family: 'Consolas', 'Courier New', monospace;
+      color: var(--accent);
+      font-weight: bold;
+    }
+    .rule-box {
+      background-color: var(--bg-card);
+      border: 1px dashed var(--accent);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .rule-box strong {
+      color: var(--accent);
+    }
+    .site-footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <h1>FORZA RWD DRIFT TUNING WIKI</h1>
+    <p>純後驅甩尾底盤參數與車輛動態知識庫 — 依據 AGENTS.md 規範建置</p>
+    <nav class="site-nav">
+      <a href="index.html" class="active">首頁：核心調校基準</a>
+      <a href="#car-presets">示範車款設定</a>
+      <a href="https://github.com/" target="_blank">檢視 AGENTS.md 規範</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2 class="section-title">核心底盤調校模組 (RWD Base Logic)</h2>
+    <div class="grid-layout">
+      
+      <article class="tuning-card">
+        <div>
+          <div class="card-header">
+            <h2>四輪定位 (Alignment)</h2>
+            <span class="badge">GEOMETRY</span>
+          </div>
+          <p class="card-desc">大角度橫移時，前輪需設定大負外傾角以確保轉向極限時的胎面接觸面積；後輪微幅負傾角讓動力滑胎過渡更線性。</p>
+        </div>
+        <table class="param-table">
+          <tr><td>前輪外傾角 (Front Camber)</td><td class="val">-5.0°</td></tr>
+          <tr><td>後輪外傾角 (Rear Camber)</td><td class="val">-1.5°</td></tr>
+          <tr><td>前輪前束角 (Front Toe)</td><td class="val">+0.2° (Out)</td></tr>
+          <tr><td>後輪前束角 (Rear Toe)</td><td class="val">-0.1° (In)</td></tr>
+          <tr><td>前輪後傾角 (Front Caster)</td><td class="val">7.0°</td></tr>
+        </table>
+      </article>
+
+      <article class="tuning-card">
+        <div>
+          <div class="card-header">
+            <h2>防傾桿與懸吊 (ARBs &amp; Springs)</h2>
+            <span class="badge">SUSPENSION</span>
+          </div>
+          <p class="card-desc">前軟後硬的防傾桿設定有助於車尾在入彎瞬間迅速打破抓地力，同時維持前軸精準的指向性與反打手感。</p>
+        </div>
+        <table class="param-table">
+          <tr><td>前防傾桿 (Front ARB)</td><td class="val">22.50</td></tr>
+          <tr><td>後防傾桿 (Rear ARB)</td><td class="val">40.00</td></tr>
+          <tr><td>前彈簧硬度 (Front Springs)</td><td class="val">中偏硬 (依車重)</td></tr>
+          <tr><td>後彈簧硬度 (Rear Springs)</td><td class="val">中偏軟 (增加後軸循跡)</td></tr>
+          <tr><td>車身高度 (Ride Height)</td><td class="val">最低後微調 +1 格</td></tr>
+        </table>
+      </article>
+
+      <article class="tuning-card">
+        <div>
+          <div class="card-header">
+            <h2>差速器與胎壓 (Diff &amp; Tires)</h2>
+            <span class="badge">DRIVETRAIN</span>
+          </div>
+          <p class="card-desc">純後驅甩尾必須將加速鎖定率調至 100% 確保雙輪同步起漂；減速鎖定率調低以防止收油換位時車頭推頭。</p>
+        </div>
+        <table class="param-table">
+          <tr><td>差速器加速鎖定 (Acceleration)</td><td class="val">100%</td></tr>
+          <tr><td>差速器減速鎖定 (Deceleration)</td><td class="val">25%</td></tr>
+          <tr><td>前輪胎壓 (Front Tire Pressure)</td><td class="val">28.0 PSI</td></tr>
+          <tr><td>後輪胎壓 (Rear Tire Pressure)</td><td class="val">24.0 PSI</td></tr>
+          <tr><td>煞車力道分配 (Brake Balance)</td><td class="val">前 65% (防鎖死後輪)</td></tr>
+        </table>
+      </article>
+
+    </div>
+
+    <h2 class="section-title" id="car-presets">車款專屬調校歸檔 (Car-Specific Presets)</h2>
+    <div class="grid-layout">
+
+      <article class="tuning-card">
+        <div>
+          <div class="card-header">
+            <h2>Aston Martin Valkyrie AMR Pro</h2>
+            <span class="badge">RWD DRIFT SPEC</span>
+          </div>
+          <p class="card-desc">針對高轉速自然進氣與極端空氣力學車體改造的純後驅甩尾設定，大幅釋放後軸束縛並拉長 1~4 檔延伸性。</p>
+        </div>
+        <table class="param-table">
+          <tr><td>驅動形式 (Drivetrain)</td><td class="val">RWD (純後驅)</td></tr>
+          <tr><td>前 / 後外傾角 (Camber F/R)</td><td class="val">-5.0° / -1.0°</td></tr>
+          <tr><td>前 / 後防傾桿 (ARBs F/R)</td><td class="val">18.50 / 45.00</td></tr>
+          <tr><td>終傳比 (Final Drive)</td><td class="val">3.45 (高速橫移延伸)</td></tr>
+          <tr><td>差速器鎖定 (Diff Accel / Decel)</td><td class="val">100% / 15%</td></tr>
+        </table>
+      </article>
+
+      <article class="tuning-card">
+        <div>
+          <div class="card-header">
+            <h2>Nissan Silvia Spec-R (S15)</h2>
+            <span class="badge">RWD STREET DRIFT</span>
+          </div>
+          <p class="card-desc">標準前置後驅 (FR) 黃金軸距設定，適合山道連續髮夾彎的鐘擺重心轉移與高角度貼牆路線。</p>
+        </div>
+        <table class="param-table">
+          <tr><td>驅動形式 (Drivetrain)</td><td class="val">RWD (純後驅)</td></tr>
+          <tr><td>前 / 後外傾角 (Camber F/R)</td><td class="val">-4.8° / -1.5°</td></tr>
+          <tr><td>前 / 後防傾桿 (ARBs F/R)</td><td class="val">24.00 / 38.50</td></tr>
+          <tr><td>終傳比 (Final Drive)</td><td class="val">4.10 (高扭力密齒比)</td></tr>
+          <tr><td>差速器鎖定 (Diff Accel / Decel)</td><td class="val">100% / 30%</td></tr>
+        </table>
+      </article>
+
+    </div>
+
+    <div class="rule-box">
+      <strong>AI 擴充提示 (AGENTS.md Workflow)：</strong> 當需要新增車款頁面或插入新的調校卡片時，只需將車款名稱與參數交給 AI，AI 即會自動套用 <code>.tuning-card</code> 與 <code>.param-table</code> 結構，並產生符合 kebab-case 命名規範的子頁面。
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>Forza Horizon RWD Drift Tuning Knowledge Base | Built with Structured AGENTS.md Rules</p>
+  </footer>
+
+</body>
+</html>
